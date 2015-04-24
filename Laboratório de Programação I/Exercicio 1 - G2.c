@@ -7,7 +7,7 @@ typedef struct aluno{
   char nome[50];
   char endereco[100];
 }t_aluno;
-
+//teste
 void print_alunos(t_aluno a1[], int cadastrados){
    int i;
     for (i = 0; i < cadastrados; i++) {
