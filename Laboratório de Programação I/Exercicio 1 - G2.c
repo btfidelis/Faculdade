@@ -62,7 +62,7 @@ void buscarAluno(t_aluno a1[], int cadastrados){
             gets(palavra);
             fflush(stdin);
             for(i = 0; i < cadastrados; i++){
-               printf("%s ----- %s", a1[i].nome)
+               printf("%s ----- %s", a1[i].nome);
                 if(strcmp(a1[i].nome,palavra) == 0){
                   print_aluno(a1[i],i);
                 }
