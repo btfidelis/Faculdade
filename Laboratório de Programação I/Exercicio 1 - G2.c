@@ -50,9 +50,9 @@ int buscarAluno(t_aluno a1[], int cadastrados, int * encontrados){
 
     switch(tipo) {
         case 1:
+            c = 0;
             printf("Digite a matricula: ");
             scanf("%d", &numero);
-            c=0;
             for(i = 0; i < cadastrados; i++){
                 if(a1[i].matricula == numero){
                     encontrados[c]= i;
@@ -62,6 +62,7 @@ int buscarAluno(t_aluno a1[], int cadastrados, int * encontrados){
             return c;
             break;
         case 2:
+            c = 0;
             printf("Digite a idade: ");
             scanf("%d", &numero);
             for(i = 0; i < cadastrados; i++){
@@ -73,30 +74,32 @@ int buscarAluno(t_aluno a1[], int cadastrados, int * encontrados){
             return c;
             break;
         case 3:
+            c = 0;
             printf("Digite o nome: ");
             fflush(stdin);
             gets(palavra);
             fflush(stdin);
             for(i = 0; i < cadastrados; i++){
-                if(strcmp(a1[i].nome,palavra) == 0){
-                  print_aluno(a1[i],i);
+                if(strstr(a1[i].nome,palavra) != NULL){
+                  encontrados[c] = i;
+                  c++;
                 }
             }
-            system("pause");
-            system("cls");
+            return c;
             break;
         case 4:
+            c = 0;
             printf("Digite o endereco: ");
             fflush(stdin);
             gets(palavra);
             fflush(stdin);
             for(i = 0; i < cadastrados; i++){
-                if(a1[i].endereco == "4"){
-                  print_aluno(a1[i],i);
+                if(strstr(a1[i].endereco,palavra) != NULL){
+                  encontrados[c] = i;
+                  c++;
                 }
             }
-            system("pause");
-            system("cls");
+            return c;
             break;
         default:
               printf("\n Opcao invalida");
@@ -104,9 +107,14 @@ int buscarAluno(t_aluno a1[], int cadastrados, int * encontrados){
     }
 }
 
-void retorna_aluno(t_aluno a[], int cadastrados,int * encontrados)
+int retorna_aluno(t_aluno a[], int cadastrados,int * encontrados)
 {
     int i, e = buscarAluno(a, cadastrados, encontrados);
+
+    if (e == 0){
+        printf("\n Nenhum aluno encontrado \n");
+        return 0;
+    }
 
     for(i = 0; i < e; i++){
         print_aluno(a[encontrados[i]],i);
@@ -119,7 +127,7 @@ int menu(){
     int opcao;
     printf("----- MENU -----\n");
     printf("| 1 - Cadastrar Aluno \n");
-    printf("| 2 - Apresentar aluno p/ Matricula\n");
+    printf("| 2 - Pesquisar Aluno \n");
     printf("| 3 - Listar todos os alunos \n");
     printf("| 0 - Sair\n\n");
     printf("Selecione uma opcao: ");
