@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define ALUNOS 3
+#define ALUNOS 5
 typedef struct aluno{
   int matricula;
   int idade;
@@ -117,8 +117,7 @@ int retorna_aluno(t_aluno a[], int cadastrados,int * encontrados)
     }
 
     for(i = 0; i < e; i++){
-        print_aluno(a[encontrados[i]],i);
-        //printf("\nencontrados : %d\n", encontrados[i]);
+        print_aluno(a[encontrados[i]],encontrados[i]);
     }
 
 }
@@ -129,6 +128,7 @@ int menu(){
     printf("| 1 - Cadastrar Aluno \n");
     printf("| 2 - Pesquisar Aluno \n");
     printf("| 3 - Listar todos os alunos \n");
+    printf("| 4 - Excluir aluno \n");
     printf("| 0 - Sair\n\n");
     printf("Selecione uma opcao: ");
     scanf("%d", &opcao);
@@ -154,6 +154,77 @@ void cadastra_aluno (t_aluno aluno[], int cadastrados){
 
 }
 
+int confirmar_selecao()
+{
+    char resposta;
+
+    printf(" \n Deseja prosseguir ? (s/n): ");
+    scanf("%c", &resposta);
+
+    if(resposta == 's'){
+        return 1;
+    }
+
+    return 0;
+}
+
+int remover_aluno(t_aluno a[], int * cadastrados, int del)
+{
+    int i;
+
+    if(del >= *cadastrados){
+        printf("Posisao invalida");
+        return 0;
+    }
+
+    for(i = del; i < (*cadastrados); i++){
+        a[del] = a[i + 1];
+    }
+    * cadastrados = (* cadastrados) - 1;
+
+    return 1;
+}
+
+int excluir_aluno(t_aluno a[], int * cadastrados,int * encontrados)
+{
+    int e, sel, c, i;
+    printf("cadastrados no excluir : %d \n", cadastrados);
+    e = buscarAluno(a, *cadastrados, encontrados);
+
+    if(e == 0){
+        printf("\n Nenhum aluno encontrado \n");
+        return 0;
+    }
+
+    for(i = 0; i < e; i++){
+        print_aluno(a[encontrados[i]],encontrados[i]);
+    }
+
+    if (e > 1){
+        printf("\n Qual dos alunos deseja excluir ? :");
+        scanf("%d", &sel);
+        sel--;
+    } else {
+        sel = encontrados[0];
+    }
+    system("cls");
+    print_aluno(a[sel], sel);
+
+    printf("\n Ao excluir, o registro e removido permanentemente!");
+    fflush(stdin);
+    c = confirmar_selecao();
+    fflush(stdin);
+
+    if(c == 1){
+        c = remover_aluno(a, cadastrados, sel);
+        if(c == 1){
+            printf("\n aluno excluido com sucesso\n");
+            return 1;
+        }
+    }
+    printf("\n Ocorreu um erro \n");
+    return 0;
+}
 
 int main(){
     t_aluno alunos[ALUNOS];
@@ -180,6 +251,10 @@ int main(){
                 break;
             case 3:
                 print_alunos(alunos, cadastrados);
+                break;
+            case 4:
+                printf("cadastrados no main : %d \n", &cadastrados);
+                excluir_aluno(alunos, &cadastrados, encontrados);
                 break;
             case 0:
                 sair = 1;
