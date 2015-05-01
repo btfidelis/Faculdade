@@ -172,13 +172,13 @@ int remover_aluno(t_aluno a[], int * cadastrados, int del)
 {
     int i;
 
-    if(del >= *cadastrados){
+    if(del >= (*cadastrados)){
         printf("Posisao invalida");
         return 0;
     }
 
     for(i = del; i < (*cadastrados); i++){
-        a[del] = a[i + 1];
+        a[i] = a[i + 1];
     }
     * cadastrados = (* cadastrados) - 1;
 
@@ -188,7 +188,7 @@ int remover_aluno(t_aluno a[], int * cadastrados, int del)
 int excluir_aluno(t_aluno a[], int * cadastrados,int * encontrados)
 {
     int e, sel, c, i;
-    printf("cadastrados no excluir : %d \n", cadastrados);
+
     e = buscarAluno(a, *cadastrados, encontrados);
 
     if(e == 0){
@@ -222,7 +222,7 @@ int excluir_aluno(t_aluno a[], int * cadastrados,int * encontrados)
             return 1;
         }
     }
-    printf("\n Ocorreu um erro \n");
+    printf("\n Cancelado \n");
     return 0;
 }
 
