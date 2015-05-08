@@ -129,6 +129,7 @@ int menu(){
     printf("| 2 - Pesquisar Aluno \n");
     printf("| 3 - Listar todos os alunos \n");
     printf("| 4 - Excluir aluno \n");
+    printf("| 6 - Listar aluno ordenado \n");
     printf("| 0 - Sair\n\n");
     printf("Selecione uma opcao: ");
     scanf("%d", &opcao);
@@ -226,6 +227,73 @@ int excluir_aluno(t_aluno a[], int * cadastrados,int * encontrados)
     return 0;
 }
 
+void listar_ordenado(t_aluno a[], int cadastrados, int encontrados)
+{
+    int i, opt;
+    int c;
+    int num;
+    t_aluno troca;
+
+    printf("Informe por qual campo deseja ordenar \n");
+    printf("1 - matricula\n");
+    printf("2 - nome \n");
+    printf("3 - idade \n");
+    printf("4 - endereco \n -->");
+    scanf("%d", &opt);
+
+    switch(opt)
+    {
+        case 1:
+            for(i = 0; i < (cadastrados - 1); i++) {
+                for(c = 0; c < (cadastrados - i - 1); c++) {
+                    if(a[c].matricula > (a[c + 1].matricula)) {
+                        troca = a[c];
+                        a[c] = a[c + 1];
+                        a[c + 1] = troca;
+                    }
+                }
+            }
+            break;
+        case 2:
+            for(i = 0; i < (cadastrados - 1); i++) {
+                for(c = 0; c < (cadastrados - i - 1); c++) {
+                    if(a[c].nome > (a[c + 1].nome)) {
+                        troca = a[c];
+                        a[c] = a[c + 1];
+                        a[c + 1] = troca;
+                    }
+                }
+            }
+            break;
+        case 3:
+            for(i = 0; i < (cadastrados - 1); i++) {
+                for(c = 0; c < (cadastrados - i - 1); c++) {
+                    if(a[c].idade > (a[c + 1].idade)) {
+                        troca = a[c];
+                        a[c] = a[c + 1];
+                        a[c + 1] = troca;
+                    }
+                }
+            }
+            break;
+        case 4:
+            for(i = 0; i < (cadastrados - 1); i++) {
+                for(c = 0; c < (cadastrados - i - 1); c++) {
+                    if(a[c].endereco > (a[c + 1].endereco)) {
+                        troca = a[c];
+                        a[c] = a[c + 1];
+                        a[c + 1] = troca;
+                    }
+                }
+            }
+            break;
+        default:
+            printf("Opcao invalida");
+            break;
+    }
+    print_alunos(a, cadastrados);
+}
+
 int main(){
     t_aluno alunos[ALUNOS];
     int encontrados[ALUNOS];
@@ -253,9 +321,10 @@ int main(){
                 print_alunos(alunos, cadastrados);
                 break;
             case 4:
-                printf("cadastrados no main : %d \n", &cadastrados);
                 excluir_aluno(alunos, &cadastrados, encontrados);
                 break;
+            case 6:
+                listar_ordenado(alunos, cadastrados, encontrados);
             case 0:
                 sair = 1;
                 break;
