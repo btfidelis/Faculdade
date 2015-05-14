@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include<conio.h>
 #define ALUNOS 5
 typedef struct aluno{
   int matricula;
   int idade;
+  float notas[3];
   char nome[50];
   char endereco[100];
 }t_aluno;
@@ -130,6 +132,7 @@ int menu(){
     printf("| 3 - Listar todos os alunos \n");
     printf("| 4 - Excluir aluno \n");
     printf("| 6 - Listar aluno ordenado \n");
+    printf("| 7 - Estatisticas da Turma \n");
     printf("| 0 - Sair\n\n");
     printf("Selecione uma opcao: ");
     scanf("%d", &opcao);
@@ -138,6 +141,8 @@ int menu(){
 }
 
 void cadastra_aluno (t_aluno aluno[], int cadastrados){
+    int i;
+
     printf("----- CADASTRO DE ALUNOS -----\n");
     printf("Informe a matricula do aluno: ");
     scanf("%d", &aluno[cadastrados].matricula);
@@ -150,6 +155,10 @@ void cadastra_aluno (t_aluno aluno[], int cadastrados){
     fflush(stdin);
     printf("Informe o endereco do aluno: ");
     gets(aluno[cadastrados].endereco);
+    for (i = 0; i < 3; i++) {
+        printf("Digite a nota %d: ", i + 1);
+        scanf("%d", &aluno[cadastrados].notas[i]);
+    }
     system("cls");
     printf("Aluno cadastrado com sucesso !\n\n");
 
