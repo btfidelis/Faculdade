@@ -5,7 +5,6 @@
 typedef struct aluno{
   int matricula;
   int idade;
-  float notas[3];
   char nome[50];
   char endereco[100];
 }t_aluno;
@@ -18,15 +17,6 @@ void print_alunos(t_aluno a1[], int cadastrados){
     printf("|%-3s+%-10s+%-10s+%-6s+%-15s|\n","---","----------", "----------", "------", "---------------");
     for (i = 0; i < cadastrados; i++) {
         printf("|%-3d|%-10d|%-10s|%-6d|%-15s|\n",i+1, a1[i].matricula,a1[i].nome, a1[i].idade, a1[i].endereco);
-
-      /*
-        printf("ALUNO: #%d",i+1);
-        printf("\nMatricula: %d", a1[i].matricula);
-        printf("\nNome: %s", a1[i].nome);
-        printf("Idade: %d", a1[i].idade);
-        printf("\nEndereco: %s \n", a1[i].endereco);
-        printf("--------------------------\n");
-        */
     }
     system("pause");
     system("cls");
@@ -37,7 +27,7 @@ void print_aluno(t_aluno a1,int i){
 }
 
 
-int buscarAluno(t_aluno a1[], int cadastrados, int * encontrados){
+/*int buscarAluno(t_aluno a1[]){
     int i,tipo, numero,c;
     char palavra[100];
     printf("----- BUSCA DE ALUNOS -----\n\n");
@@ -122,7 +112,7 @@ int retorna_aluno(t_aluno a[], int cadastrados,int * encontrados)
         print_aluno(a[encontrados[i]],encontrados[i]);
     }
 
-}
+}*/
 
 int menu(){
     int opcao;
@@ -140,28 +130,50 @@ int menu(){
     return (int)opcao;
 }
 
-void cadastra_aluno (t_aluno aluno[], int cadastrados){
-    int i;
+int file_add_aluno(FILE * arquivo, t_aluno * aluno, int size)
+{
+    if (arquivo == NULL)
+    {
+        printf("erro ao abrir arquivo");
+        return 0;
+    }
 
+    int s = fwrite(aluno, size, 1, arquivo);
+
+    if (s == 1) {
+        fflush(arquivo);
+        fclose(arquivo);
+        return 1;
+    }
+
+}
+
+void cadastra_aluno (t_aluno aluno, FILE * dados){
+    int i;
+    printf("%d", dados);
     printf("----- CADASTRO DE ALUNOS -----\n");
     printf("Informe a matricula do aluno: ");
-    scanf("%d", &aluno[cadastrados].matricula);
+    scanf("%d", &aluno.matricula);
     fflush(stdin);
     printf("Informe o nome do aluno: ");
-    gets(aluno[cadastrados].nome);
+    gets(aluno.nome);
     fflush(stdin);
     printf("Informe a idade do aluno: ");
-    scanf("%d", &aluno[cadastrados].idade);
+    scanf("%d", &aluno.idade);
     fflush(stdin);
     printf("Informe o endereco do aluno: ");
-    gets(aluno[cadastrados].endereco);
-    for (i = 0; i < 3; i++) {
+    gets(aluno.endereco);
+/*    for (i = 0; i < 3; i++) {
         printf("Digite a nota %d: ", i + 1);
         scanf("%d", &aluno[cadastrados].notas[i]);
-    }
-    system("cls");
-    printf("Aluno cadastrado com sucesso !\n\n");
+    }*/
 
+    if(file_add_aluno(dados, &aluno, sizeof(aluno)) == 1) {
+        system("cls");
+        printf("Aluno cadastrado com sucesso !\n\n");
+    }
+
+    printf("Erro");
 }
 
 int confirmar_selecao()
@@ -178,135 +190,14 @@ int confirmar_selecao()
     return 0;
 }
 
-int remover_aluno(t_aluno a[], int * cadastrados, int del)
-{
-    int i;
-
-    if(del >= (*cadastrados)){
-        printf("Posisao invalida");
-        return 0;
-    }
-
-    for(i = del; i < (*cadastrados); i++){
-        a[i] = a[i + 1];
-    }
-    * cadastrados = (* cadastrados) - 1;
-
-    return 1;
-}
-
-int excluir_aluno(t_aluno a[], int * cadastrados,int * encontrados)
-{
-    int e, sel, c, i;
-
-    e = buscarAluno(a, *cadastrados, encontrados);
-
-    if(e == 0){
-        printf("\n Nenhum aluno encontrado \n");
-        return 0;
-    }
-
-    for(i = 0; i < e; i++){
-        print_aluno(a[encontrados[i]],encontrados[i]);
-    }
-
-    if (e > 1){
-        printf("\n Qual dos alunos deseja excluir ? :");
-        scanf("%d", &sel);
-        sel--;
-    } else {
-        sel = encontrados[0];
-    }
-    system("cls");
-    print_aluno(a[sel], sel);
-
-    printf("\n Ao excluir, o registro e removido permanentemente!");
-    fflush(stdin);
-    c = confirmar_selecao();
-    fflush(stdin);
-
-    if(c == 1){
-        c = remover_aluno(a, cadastrados, sel);
-        if(c == 1){
-            printf("\n aluno excluido com sucesso\n");
-            return 1;
-        }
-    }
-    printf("\n Cancelado \n");
-    return 0;
-}
-
-void listar_ordenado(t_aluno a[], int cadastrados, int encontrados)
-{
-    int i, opt;
-    int c;
-    int num;
-    t_aluno troca;
-
-    printf("Informe por qual campo deseja ordenar \n");
-    printf("1 - matricula\n");
-    printf("2 - nome \n");
-    printf("3 - idade \n");
-    printf("4 - endereco \n -->");
-    scanf("%d", &opt);
-
-    switch(opt)
-    {
-        case 1:
-            for(i = 0; i < (cadastrados - 1); i++) {
-                for(c = 0; c < (cadastrados - i - 1); c++) {
-                    if(a[c].matricula > (a[c + 1].matricula)) {
-                        troca = a[c];
-                        a[c] = a[c + 1];
-                        a[c + 1] = troca;
-                    }
-                }
-            }
-            break;
-        case 2:
-            for(i = 0; i < (cadastrados - 1); i++) {
-                for(c = 0; c < (cadastrados - i - 1); c++) {
-                    if(a[c].nome > (a[c + 1].nome)) {
-                        troca = a[c];
-                        a[c] = a[c + 1];
-                        a[c + 1] = troca;
-                    }
-                }
-            }
-            break;
-        case 3:
-            for(i = 0; i < (cadastrados - 1); i++) {
-                for(c = 0; c < (cadastrados - i - 1); c++) {
-                    if(a[c].idade > (a[c + 1].idade)) {
-                        troca = a[c];
-                        a[c] = a[c + 1];
-                        a[c + 1] = troca;
-                    }
-                }
-            }
-            break;
-        case 4:
-            for(i = 0; i < (cadastrados - 1); i++) {
-                for(c = 0; c < (cadastrados - i - 1); c++) {
-                    if(a[c].endereco > (a[c + 1].endereco)) {
-                        troca = a[c];
-                        a[c] = a[c + 1];
-                        a[c + 1] = troca;
-                    }
-                }
-            }
-            break;
-        default:
-            printf("Opcao invalida");
-            break;
-    }
-    print_alunos(a, cadastrados);
-}
-
 int main(){
-    t_aluno alunos[ALUNOS];
-    int encontrados[ALUNOS];
-    int cadastrados = 0,sair = 0;
+    //t_aluno alunos[ALUNOS];
+    t_aluno aluno;
+    char caminho[] = "alunos.txt";
+    FILE * dados;
+    //int encontrados[ALUNOS];
+    //int cadastrados = 0,
+    int sair = 0;
     /*
     *      Menu
     *  1 - Cadastrar Aluno
@@ -320,20 +211,21 @@ int main(){
 
         switch(menu()){
             case 1:
-                cadastra_aluno(alunos, cadastrados);
-                cadastrados++;
+                //dados = fopen(caminho, "wb");
+                cadastra_aluno(aluno, dados);
+                //cadastrados++;
                 break;
             case 2:
-                retorna_aluno(alunos,cadastrados,encontrados);
+                //retorna_aluno(alunos,cadastrados,encontrados);
                 break;
             case 3:
-                print_alunos(alunos, cadastrados);
+                //print_alunos(alunos, cadastrados);
                 break;
             case 4:
-                excluir_aluno(alunos, &cadastrados, encontrados);
+                //excluir_aluno(alunos, &cadastrados, encontrados);
                 break;
             case 6:
-                listar_ordenado(alunos, cadastrados, encontrados);
+               // listar_ordenado(alunos, cadastrados, encontrados);
             case 0:
                 sair = 1;
                 break;
