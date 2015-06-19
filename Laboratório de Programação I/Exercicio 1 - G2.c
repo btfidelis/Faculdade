@@ -138,6 +138,8 @@ int file_add_aluno(FILE * arquivo, t_aluno * aluno, int size)
         return 0;
     }
 
+    fseek(arquivo, 0, SEEK_END);
+
     int s = fwrite(aluno, size, 1, arquivo);
 
     if (s == 1) {
@@ -171,9 +173,9 @@ void cadastra_aluno (t_aluno aluno, FILE * dados){
     if(file_add_aluno(dados, &aluno, sizeof(aluno)) == 1) {
         system("cls");
         printf("Aluno cadastrado com sucesso !\n\n");
+    } else {
+        printf("Erro");
     }
-
-    printf("Erro");
 }
 
 int confirmar_selecao()
@@ -211,7 +213,7 @@ int main(){
 
         switch(menu()){
             case 1:
-                //dados = fopen(caminho, "wb");
+                dados = fopen(caminho, "ab");
                 cadastra_aluno(aluno, dados);
                 //cadastrados++;
                 break;
